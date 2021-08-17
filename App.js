@@ -1,23 +1,20 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
+import Header from './components/Header';
+import StartGameScreen from './screens/StartGameScreen';
+
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.containerInner}>
-        <Text>This is the beginning</Text>
-      </View>
+      <Header title="Guess a Number" />
+      <StartGameScreen />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 70
-  },
-  containerInner: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20
+    flex: 1
   }
 });

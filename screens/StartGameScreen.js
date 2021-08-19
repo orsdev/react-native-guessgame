@@ -50,7 +50,10 @@ const StartGameScreen = () => {
 
   if (confirmed) {
     confirmedOutput = (
-      <Text>Chosen Number: {selectedNumber}</Text>
+      <Card styles={styles.summaryContainer}>
+        <Text style={{ fontSize: 18, marginBottom: 10 }}>You selected: {selectedNumber}</Text>
+        <Button title="Start Game" />
+      </Card>
     )
   };
 
@@ -109,6 +112,12 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     paddingHorizontal: 10
+  },
+  summaryContainer: {
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
   }
 });
 

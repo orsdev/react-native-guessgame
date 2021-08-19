@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Card from '../components/Card';
 
-const StartGameScreen = () => {
+const StartGameScreen = ({ onStartGameProp }) => {
   const [enteredValue, setEnteredValue] = React.useState('');
   const [confirmed, setConfirmed] = React.useState(false);
   const [selectedNumber, setSelectedNumber] = React.useState();
@@ -23,6 +23,7 @@ const StartGameScreen = () => {
 
   const resetInputHandler = () => {
     setEnteredValue('');
+    onStartGameProp('');
     setConfirmed(false);
   }
 
@@ -52,7 +53,7 @@ const StartGameScreen = () => {
     confirmedOutput = (
       <Card styles={styles.summaryContainer}>
         <Text style={{ fontSize: 18, marginBottom: 10 }}>You selected: {selectedNumber}</Text>
-        <Button title="Start Game" />
+        <Button title="Start Game" onPress={() => onStartGameProp(selectedNumber)} />
       </Card>
     )
   };

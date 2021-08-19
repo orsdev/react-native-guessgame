@@ -4,23 +4,81 @@ import {
   View,
   Text,
   TextInput,
-  Button
+  TouchableWithoutFeedback,
+  Keyboard,
+  Button,
+  Alert
 } from 'react-native';
 import Card from '../components/Card';
 
 const StartGameScreen = () => {
+  const [enteredValue, setEnteredValue] = React.useState('');
+  const [confirmed, setConfirmed] = React.useState(false);
+  const [selectedNumber, setSelectedNumber] = React.useState();
+
+  const inputHandler = (value) => {
+    const replaceNonNumbers = value.replace(/[^0-9]/g, '');
+    setEnteredValue(replaceNonNumbers);
+  }
+
+  const resetInputHandler = () => {
+    setEnteredValue('');
+    setConfirmed(false);
+  }
+
+  const confirmInputHandler = () => {
+    if (enteredValue) {
+      const toNumber = parseInt(enteredValue);
+      if (isNaN(toNumber) || toNumber <= 0 || toNumber > 99) {
+        Alert.alert('Invalid Number',
+          'Input has to be a number between 1 to 99',
+          [
+            { text: 'Close', style: 'destructive', onPress: resetInputHandler }
+          ]
+        );
+
+        return;
+      } else {
+        setSelectedNumber(toNumber);
+        setEnteredValue('');
+        setConfirmed(true);
+      }
+    }
+  }
+
+  let confirmedOutput;
+
+  if (confirmed) {
+    confirmedOutput = (
+      <Text>Chosen Number: {selectedNumber}</Text>
+    )
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Start a New Game</Text>
-      <Card styles={styles.containerInner}>
-        <Text>Select a Number</Text>
-        <TextInput />
-        <View style={styles.button}>
-          <Button title="Reset" />
-          <Button title="Confirm" />
-        </View>
-      </Card>
-    </View>
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+    }}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Start a New Game</Text>
+        <Card styles={styles.containerInner}>
+          <Text>Select a Number</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            autoCorrect={false}
+            maxLength={2}
+            blurOnSubmit
+            value={enteredValue}
+            onChangeText={inputHandler}
+          />
+          <View style={styles.buttons}>
+            <Button title="Reset" onPress={resetInputHandler} />
+            <Button title="Confirm" onPress={confirmInputHandler} />
+          </View>
+        </Card>
+        {confirmedOutput}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -35,11 +93,18 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
     alignItems: 'center'
   },
+  input: {
+    width: '90%',
+    height: 30,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
+    marginVertical: 10
+  },
   title: {
     fontSize: 20,
     marginVertical: 10
   },
-  button: {
+  buttons: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',

@@ -22,10 +22,11 @@ const generateRandomNumber = (min, max, exclude) => {
 	return randNumber;
 };
 
-const GameScreen = ({ userChoice }) => {
+const GameScreen = ({ userChoice, onGameOverProp }) => {
 	const [currentGuess, setCurrentGuess] = React.useState(
 		generateRandomNumber(1, 100, userChoice)
 	);
+	const [rounds, setRounds] = React.useState(0);
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
 
@@ -48,7 +49,14 @@ const GameScreen = ({ userChoice }) => {
 		const nextNumber = generateRandomNumber(currentLow.current, currentHigh.current, currentGuess);
 
 		setCurrentGuess(nextNumber);
+		setRounds(curRounds => curRounds + 1);
 	}
+
+	React.useEffect(() => {
+		if (currentGuess === userChoice) {
+			onGameOverProp(rounds);
+		}
+	}, [currentGuess, userChoice, onGameOverProp]);
 
 	return (
 		<View style={{

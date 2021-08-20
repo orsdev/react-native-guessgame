@@ -2,19 +2,33 @@ import React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
 
 import Header from './components/Header';
+import GameOver from './screens/GameOver';
 import GameScreen from './screens/GameScreen';
 import StartGameScreen from './screens/StartGameScreen';
 
 export default function App() {
   const [selectedNumber, setSelectedNumber] = React.useState();
+  const [guessRounds, setGuessRounds] = React.useState(0);
 
   const startGameHandler = (numberSelected) => {
-    setSelectedNumber(numberSelected)
+    setSelectedNumber(numberSelected);
+    setGuessRounds(0);
   }
 
-  let content = <StartGameScreen onStartGameProp={startGameHandler} />
+  const gameOverHandler = (numOfRounds) => {
+    setGuessRounds(numOfRounds);
+  }
 
-  if (selectedNumber) {
+  const resetGameHandler = () => {
+    setSelectedNumber('');
+    setGuessRounds(0);
+  }
+
+  let content = <StartGameScreen
+    onStartGameProp={startGameHandler} />
+
+
+  if (selectedNumber && guessRounds <= 0) {
     content = (
       <View
         style={{
@@ -25,17 +39,23 @@ export default function App() {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-        <GameScreen userChoice={selectedNumber} />
+        <GameScreen userChoice={selectedNumber}
+          onGameOverProp={gameOverHandler} />
         <View
           style={{
             marginTop: 10
           }}>
           <Button
             title="Reset"
-            onPress={() => setSelectedNumber('')} />
+            onPress={resetGameHandler} />
         </View>
       </View>
     )
+  } else if (guessRounds > 0) {
+    content = <GameOver
+      userGuess={selectedNumber}
+      numOfRounds={guessRounds}
+      resetGame={resetGameHandler} />
   }
 
   return (

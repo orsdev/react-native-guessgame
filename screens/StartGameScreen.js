@@ -9,6 +9,7 @@ import {
   Button,
   Alert
 } from 'react-native';
+import Colors from '../constants/Colors';
 import Card from '../components/Card';
 
 const StartGameScreen = ({ onStartGameProp }) => {
@@ -76,8 +77,12 @@ const StartGameScreen = ({ onStartGameProp }) => {
             onChangeText={inputHandler}
           />
           <View style={styles.buttons}>
-            <Button title="Reset" onPress={resetInputHandler} />
-            <Button title="Confirm" onPress={confirmInputHandler} />
+            <Button title="Reset"
+              color={Colors.primary}
+              onPress={resetInputHandler} />
+            <Button title="Confirm"
+              color={Colors.secondary}
+              onPress={confirmInputHandler} />
           </View>
         </Card>
         {confirmedOutput}

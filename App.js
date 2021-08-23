@@ -1,14 +1,38 @@
 import React from 'react';
 import { StyleSheet, View, Button } from 'react-native';
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading';
+
 
 import Header from './components/Header';
 import GameOver from './screens/GameOver';
 import GameScreen from './screens/GameScreen';
 import StartGameScreen from './screens/StartGameScreen';
 
+
+let customFonts = {
+  'Open-Sans-Regular': require('./assets/fonts/OpenSans-Regular.ttf'),
+  'Open-Sans-Bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+}
+
 export default function App() {
   const [selectedNumber, setSelectedNumber] = React.useState();
   const [guessRounds, setGuessRounds] = React.useState(0);
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    loadFontsAsync();
+  }, []);
+
+
+  async function loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  }
+
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
 
   const startGameHandler = (numberSelected) => {
     setSelectedNumber(numberSelected);
@@ -23,6 +47,7 @@ export default function App() {
     setSelectedNumber('');
     setGuessRounds(0);
   }
+
 
   let content = <StartGameScreen
     onStartGameProp={startGameHandler} />
@@ -69,6 +94,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    fontFamily: 'Open-Sans-Bold'
   }
 });

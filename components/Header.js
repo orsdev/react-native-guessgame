@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#000',
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'Open-Sans-Bold'
   }
 });
 

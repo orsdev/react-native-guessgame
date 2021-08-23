@@ -58,7 +58,7 @@ export default function App() {
       <View
         style={{
           marginVertical: 10,
-          height: 215,
+          height: '100%',
           flexDirection: 'column',
           maxWidth: '90%',
           alignItems: 'center',
@@ -66,14 +66,6 @@ export default function App() {
         }}>
         <GameScreen userChoice={selectedNumber}
           onGameOverProp={gameOverHandler} />
-        <View
-          style={{
-            marginTop: 10
-          }}>
-          <Button
-            title="Reset"
-            onPress={resetGameHandler} />
-        </View>
       </View>
     )
   } else if (guessRounds > 0) {

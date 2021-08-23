@@ -4,7 +4,8 @@ import {
 	Text,
 	StyleSheet,
 	Button,
-	Alert
+	Alert,
+	ScrollView
 } from "react-native";
 
 import Card from "../components/Card";
@@ -23,10 +24,12 @@ const generateRandomNumber = (min, max, exclude) => {
 };
 
 const GameScreen = ({ userChoice, onGameOverProp }) => {
-	const [currentGuess, setCurrentGuess] = React.useState(
-		generateRandomNumber(1, 100, userChoice)
-	);
-	const [rounds, setRounds] = React.useState(0);
+	const initialGuess =
+		generateRandomNumber(1, 100, userChoice);
+
+	const [currentGuess, setCurrentGuess] = React.useState(initialGuess);
+	const [olderGuesses, setOlderGuesses] = React.useState([initialGuess]);
+
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
 
@@ -43,18 +46,18 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 		if (direction === 'lower') {
 			currentHigh.current = currentGuess;
 		} else {
-			currentLow.current = currentGuess;
+			currentLow.current = currentGuess + 1;
 		}
 
 		const nextNumber = generateRandomNumber(currentLow.current, currentHigh.current, currentGuess);
 
 		setCurrentGuess(nextNumber);
-		setRounds(curRounds => curRounds + 1);
+		setOlderGuesses(curRounds => [nextNumber, ...curRounds]);
 	}
 
 	React.useEffect(() => {
 		if (currentGuess === userChoice) {
-			onGameOverProp(rounds);
+			onGameOverProp(olderGuesses.length);
 		}
 	}, [currentGuess, userChoice, onGameOverProp]);
 
@@ -81,6 +84,26 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 					<Button title="Greater" onPress={nextGuessHandler.bind(this, 'greater')} />
 				</View>
 			</Card>
+			<View style={styles.list}>
+				<ScrollView>
+					{olderGuesses.map(guess => (
+						<View key={guess} style={{
+							padding: 10,
+							marginVertical: 10,
+							borderColor: 'black',
+							borderWidth: 2,
+							width: '100%'
+						}}>
+							<Text style={{
+								fontSize: 18,
+								width: '100%',
+								padding: 10,
+								backgroundColor: '#ccc'
+							}}>{guess}</Text>
+						</View>
+					))}
+				</ScrollView>
+			</View>
 		</View>
 	);
 };
@@ -93,6 +116,10 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		justifyContent: 'center',
 		alignItems: 'center',
+		flexDirection: 'column'
+	},
+	list: {
+		width: '100%',
 		flexDirection: 'column'
 	}
 });

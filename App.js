@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading';
 

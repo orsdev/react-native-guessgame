@@ -5,7 +5,8 @@ import {
 	StyleSheet,
 	Button,
 	Alert,
-	ScrollView
+	ScrollView,
+	FlatList
 } from "react-native";
 
 import Card from "../components/Card";
@@ -28,7 +29,7 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 		generateRandomNumber(1, 100, userChoice);
 
 	const [currentGuess, setCurrentGuess] = React.useState(initialGuess);
-	const [olderGuesses, setOlderGuesses] = React.useState([initialGuess]);
+	const [olderGuesses, setOlderGuesses] = React.useState([initialGuess.toString()]);
 
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
@@ -52,7 +53,7 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 		const nextNumber = generateRandomNumber(currentLow.current, currentHigh.current, currentGuess);
 
 		setCurrentGuess(nextNumber);
-		setOlderGuesses(curRounds => [nextNumber, ...curRounds]);
+		setOlderGuesses(curRounds => [nextNumber.toString(), ...curRounds]);
 	}
 
 	React.useEffect(() => {
@@ -60,6 +61,25 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 			onGameOverProp(olderGuesses.length);
 		}
 	}, [currentGuess, userChoice, onGameOverProp]);
+
+	const renderItem = ({ item }) => (
+		<View style={{
+			padding: 10,
+			marginVertical: 10,
+			borderColor: 'black',
+			borderWidth: 2,
+			width: '100%'
+		}}>
+			<Text style={{
+				fontSize: 18,
+				width: '100%',
+				padding: 10,
+				backgroundColor: '#ccc'
+			}}>{item}</Text>
+		</View>
+	);
+
+
 
 	return (
 		<View style={{
@@ -85,24 +105,10 @@ const GameScreen = ({ userChoice, onGameOverProp }) => {
 				</View>
 			</Card>
 			<View style={styles.list}>
-				<ScrollView>
-					{olderGuesses.map(guess => (
-						<View key={guess} style={{
-							padding: 10,
-							marginVertical: 10,
-							borderColor: 'black',
-							borderWidth: 2,
-							width: '100%'
-						}}>
-							<Text style={{
-								fontSize: 18,
-								width: '100%',
-								padding: 10,
-								backgroundColor: '#ccc'
-							}}>{guess}</Text>
-						</View>
-					))}
-				</ScrollView>
+				<FlatList
+					data={olderGuesses}
+					renderItem={renderItem}
+					keyExtractor={(item) => item} />
 			</View>
 		</View>
 	);
@@ -120,7 +126,9 @@ const styles = StyleSheet.create({
 	},
 	list: {
 		width: '100%',
-		flexDirection: 'column'
+		flex: 1,
+		marginTop: 20,
+		flexDirection: 'row'
 	}
 });
 
